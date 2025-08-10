@@ -1,0 +1,53 @@
+name: flutter_permission_handler_plus
+description: An improved permission handler with better UX and automatic permission requests for iOS, Android, Windows, macOS, Linux, and Web.
+version: 0.0.2
+homepage: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus
+repository: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus
+issue_tracker: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/issues
+documentation: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus#readme
+topics:
+  - permissions
+  - android
+  - ios
+  - windows
+  - macos
+  - linux
+  - web
+  - flutter
+  - plugin
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.dhiabechattaoui.flutter_permission_handler_plus
+        pluginClass: FlutterPermissionHandlerPlusPlugin
+      ios:
+        pluginClass: FlutterPermissionHandlerPlusPlugin
+      windows:
+        pluginClass: FlutterPermissionHandlerPlusPlugin
+      macos:
+        pluginClass: FlutterPermissionHandlerPlusPlugin
+      linux:
+        pluginClass: FlutterPermissionHandlerPlusPlugin
+      web:
+        pluginClass: FlutterPermissionHandlerPlusWeb
+        fileName: flutter_permission_handler_plus_web_main.dart
+
+

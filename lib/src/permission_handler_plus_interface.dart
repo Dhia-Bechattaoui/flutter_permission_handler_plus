@@ -1,3 +1,4 @@
+import 'exceptions.dart';
 import 'permission_config.dart';
 import 'permission_status.dart';
 import 'permission_type.dart';

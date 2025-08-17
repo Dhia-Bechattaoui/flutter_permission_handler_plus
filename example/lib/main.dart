@@ -34,8 +34,7 @@ class PermissionDemoPage extends StatefulWidget {
 
 class _PermissionDemoPageState extends State<PermissionDemoPage> {
   final Map<PermissionType, PermissionStatus> _permissionStatuses = {};
-  final PermissionHandlerPlus _permissionHandler =
-      PermissionHandlerPlus.instance;
+  final PermissionHandlerPlus _permissionHandler = PermissionHandlerPlus();
   bool _isLoading = false;
 
   @override

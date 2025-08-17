@@ -17,14 +17,14 @@ import 'platform_detector.dart';
 /// features including automatic rationale dialogs, smart retry mechanisms, and seamless
 /// settings integration.
 class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
-  /// Private constructor for singleton pattern.
-  PermissionHandlerPlus._();
-
   /// Factory constructor that returns the singleton instance.
   factory PermissionHandlerPlus() {
     _instance ??= PermissionHandlerPlus._();
     return _instance!;
   }
+
+  /// Private constructor for singleton pattern.
+  PermissionHandlerPlus._();
 
   /// The method channel used to communicate with platform-specific code.
   static const MethodChannel _channel =
@@ -39,12 +39,6 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Singleton instance of the permission handler.
   static PermissionHandlerPlus? _instance;
-
-  /// Gets the singleton instance of [PermissionHandlerPlus].
-  static PermissionHandlerPlus get instance {
-    _instance ??= PermissionHandlerPlus._();
-    return _instance!;
-  }
 
   /// Requests a single permission with enhanced UX features.
   ///

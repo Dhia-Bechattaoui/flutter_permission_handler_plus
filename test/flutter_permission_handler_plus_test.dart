@@ -192,14 +192,14 @@ void main() {
 
   group('PermissionHandlerPlus', () {
     test('should be singleton', () {
-      final instance1 = PermissionHandlerPlus.instance;
-      final instance2 = PermissionHandlerPlus.instance;
+      final instance1 = PermissionHandlerPlus();
+      final instance2 = PermissionHandlerPlus();
 
       expect(identical(instance1, instance2), true);
     });
 
     test('should clear cache', () {
-      final handler = PermissionHandlerPlus.instance;
+      final handler = PermissionHandlerPlus();
 
       // This should not throw
       expect(handler.clearCache, returnsNormally);

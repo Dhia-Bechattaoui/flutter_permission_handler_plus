@@ -7,26 +7,37 @@
 
 An improved permission handler with better UX and automatic permission requests for Flutter applications.
 
+<p align="center">
+  <img src="assets/example.gif" alt="Example usage" width="300" />
+</p>
+
 ## 🌟 Features
 
-- **Enhanced UX**: Automatic rationale dialogs with customizable messages
-- **Smart Retry Logic**: Intelligent handling of permission denials with contextual guidance  
-- **Settings Integration**: Seamless navigation to app settings for manual permission management
-- **Batch Requests**: Efficient multiple permission requests with improved user experience
-- **Type Safety**: Full Dart type safety with comprehensive error handling
-- **Performance Optimized**: Minimal overhead with efficient permission state caching
+- **Real permission handling**: Built on top of the `permission_handler` plugin for fully functional platform requests
+- **Smart Retry Logic**: Configurable retry loop for denied permissions
+- **Settings Integration**: One-call navigation to app settings for manual permission management
+- **Batch Requests**: Request multiple permissions in one call with combined results
+- **Type Safety**: Strongly typed permission models and status helpers
+- **Caching**: Optional permission status cache to reduce platform calls
 - **Platform Support**: iOS 12.0+ and Android API 21+ (Android 5.0+)
+
+## ✅ Development Requirements
+
+- Quality: pana 160/160; `flutter analyze` and `dart analyze` clean; target test coverage >90%; comprehensive docs with examples
+- SDKs: Dart >= 3.8.0; Flutter >= 3.32.0
+- Platforms: iOS, Android, Web, Windows, macOS, Linux (WASM compatible)
+- Project hygiene: semantic versioning, `.gitignore`, `CHANGELOG`, pub.dev guidelines followed
 
 ## 🚀 Key Improvements Over Standard Permission Handling
 
 | Feature | Standard Approach | flutter_permission_handler_plus |
 |---------|------------------|----------------------------------|
-| Rationale Dialogs | Manual implementation required | ✅ Automatic with custom messages |
-| Retry Logic | Handle manually | ✅ Smart retry with configurable attempts |
-| Settings Navigation | Complex setup | ✅ One-click settings integration |
-| User Guidance | Basic status only | ✅ Contextual guidance and explanations |
+| Rationale Handling | Manual implementation required | ✅ Uses platform rationale hints with optional retry |
+| Retry Logic | Handle manually | ✅ Configurable retry attempts |
+| Settings Navigation | Complex setup | ✅ One-call settings integration |
+| User Guidance | Basic status only | ✅ Status helpers for UI |
 | Batch Requests | Sequential requests | ✅ Optimized parallel processing |
-| Error Handling | Generic exceptions | ✅ Detailed, actionable error types |
+| Error Handling | Generic exceptions | ✅ Dedicated exception types |
 
 ## 📱 Supported Permissions
 

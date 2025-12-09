@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
 
 // Conditional imports for platform-specific functionality
 import 'exceptions.dart';
@@ -9,7 +9,6 @@ import 'permission_config.dart';
 import 'permission_handler_plus_interface.dart';
 import 'permission_status.dart';
 import 'permission_type.dart';
-import 'platform_detector.dart';
 
 /// The main permission handler class providing improved UX and automatic permission requests.
 ///
@@ -25,10 +24,6 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Private constructor for singleton pattern.
   PermissionHandlerPlus._();
-
-  /// The method channel used to communicate with platform-specific code.
-  static const MethodChannel _channel =
-      MethodChannel('flutter_permission_handler_plus');
 
   /// Cache for permission statuses to avoid unnecessary platform calls.
   static final Map<PermissionType, PermissionStatus> _statusCache = {};
@@ -58,8 +53,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   /// Throws [UnsupportedPermissionException] if the permission is not supported.
   @override
   Future<PermissionStatus> requestPermission(
-    PermissionType permissionType, {
-    PermissionConfig config = const PermissionConfig(),
+    final PermissionType permissionType, {
+    final PermissionConfig config = const PermissionConfig(),
   }) async {
     try {
       // Check if there's already a pending request for this permission
@@ -74,15 +69,13 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
         final status = await _requestPermissionInternal(permissionType, config);
         completer.complete(status);
         return status;
-      } catch (e) {
+      } on Exception catch (e) {
         completer.completeError(e);
         rethrow;
       } finally {
         _pendingRequests.remove(permissionType);
       }
-    } on PlatformException catch (e) {
-      throw PermissionRequestException('Platform error: ${e.message}');
-    } catch (e) {
+    } on Exception catch (e) {
       throw PermissionRequestException('Unexpected error: $e');
     }
   }
@@ -97,20 +90,14 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   /// Returns a [Future] that completes with a map of permission statuses.
   @override
   Future<Map<PermissionType, PermissionStatus>> requestPermissions(
-    Map<PermissionType, PermissionConfig> permissions,
+    final Map<PermissionType, PermissionConfig> permissions,
   ) async {
     final results = <PermissionType, PermissionStatus>{};
 
-    // Process permissions in parallel for better performance
-    final futures = permissions.entries.map((entry) async {
+    // Process permissions sequentially to avoid platform conflicts
+    for (final entry in permissions.entries) {
       final status = await requestPermission(entry.key, config: entry.value);
-      return MapEntry(entry.key, status);
-    });
-
-    final entries = await Future.wait(futures);
-
-    for (final entry in entries) {
-      results[entry.key] = entry.value;
+      results[entry.key] = status;
     }
 
     return results;
@@ -127,8 +114,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   /// Returns a [Future] that completes with the current [PermissionStatus].
   @override
   Future<PermissionStatus> checkPermissionStatus(
-    PermissionType permissionType, {
-    bool useCache = true,
+    final PermissionType permissionType, {
+    final bool useCache = true,
   }) async {
     // Return cached status if available and cache is enabled
     if (useCache && _statusCache.containsKey(permissionType)) {
@@ -136,20 +123,16 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
     }
 
     try {
-      final result = await _channel.invokeMethod<int>(
-        'checkPermissionStatus',
-        {'permission': permissionType.name},
-      );
+      final permission = _mapPermission(permissionType);
+      final result = await permission.status;
 
-      final status = _intToPermissionStatus(result);
+      final status = _mapPermissionStatus(result);
       _statusCache[permissionType] = status;
       return status;
-    } on PlatformException catch (e) {
-      if (e.code == 'UNSUPPORTED_PERMISSION') {
-        return PermissionStatus.notApplicable;
-      }
+    } on Exception catch (e) {
       throw PermissionRequestException(
-          'Failed to check permission status: ${e.message}');
+        'Failed to check permission status: $e',
+      );
     }
   }
 
@@ -161,13 +144,13 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   /// Returns a [Future] that completes with a map of permission statuses.
   @override
   Future<Map<PermissionType, PermissionStatus>> checkPermissionStatuses(
-    List<PermissionType> permissionTypes, {
-    bool useCache = true,
+    final List<PermissionType> permissionTypes, {
+    final bool useCache = true,
   }) async {
     final results = <PermissionType, PermissionStatus>{};
 
     // Process status checks in parallel
-    final futures = permissionTypes.map((type) async {
+    final futures = permissionTypes.map((final type) async {
       final status = await checkPermissionStatus(type, useCache: useCache);
       return MapEntry(type, status);
     });
@@ -190,11 +173,10 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   @override
   Future<bool> openAppSettings() async {
     try {
-      final result = await _channel.invokeMethod<bool>('openAppSettings');
-      return result ?? false;
-    } on PlatformException catch (e) {
+      return await ph.openAppSettings();
+    } on Exception catch (e) {
       if (kDebugMode) {
-        print('Failed to open app settings: ${e.message}');
+        print('Failed to open app settings: $e');
       }
       return false;
     }
@@ -218,23 +200,14 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   /// Returns a [Future] that completes with true if rationale should be shown.
   @override
   Future<bool> shouldShowRequestPermissionRationale(
-    PermissionType permissionType,
+    final PermissionType permissionType,
   ) async {
-    // On iOS, we always show rationale for denied permissions
-    if (PlatformDetector.isIOS) {
-      final status = await checkPermissionStatus(permissionType);
-      return status.shouldShowRationale;
-    }
-
     try {
-      final result = await _channel.invokeMethod<bool>(
-        'shouldShowRequestPermissionRationale',
-        {'permission': permissionType.name},
-      );
-      return result ?? false;
-    } on PlatformException catch (e) {
+      final permission = _mapPermission(permissionType);
+      return await permission.shouldShowRequestRationale;
+    } on Exception catch (e) {
       if (kDebugMode) {
-        print('Failed to check rationale status: ${e.message}');
+        print('Failed to check rationale status: $e');
       }
       return false;
     }
@@ -242,8 +215,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Internal method to handle the actual permission request flow.
   Future<PermissionStatus> _requestPermissionInternal(
-    PermissionType permissionType,
-    PermissionConfig config,
+    final PermissionType permissionType,
+    final PermissionConfig config,
   ) async {
     // First check current status
     var status = await checkPermissionStatus(permissionType, useCache: false);
@@ -274,15 +247,13 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
     }
 
     // Request the permission with retry logic
-    int attempts = 0;
+    var attempts = 0;
     while (attempts <= config.retryCount) {
       try {
-        final result = await _channel.invokeMethod<int>(
-          'requestPermission',
-          {'permission': permissionType.name},
-        );
+        final permission = _mapPermission(permissionType);
+        final result = await permission.request();
 
-        status = _intToPermissionStatus(result);
+        status = _mapPermissionStatus(result);
         _statusCache[permissionType] = status;
 
         // If granted or permanently denied, we're done
@@ -301,13 +272,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
             break;
           }
         }
-      } on PlatformException catch (e) {
-        if (e.code == 'UNSUPPORTED_PERMISSION') {
-          throw UnsupportedPermissionException(
-            'Permission ${permissionType.name} is not supported on this platform',
-          );
-        }
-        throw PermissionRequestException('Platform error: ${e.message}');
+      } on Exception catch (e) {
+        throw PermissionRequestException('Platform error: $e');
       }
     }
 
@@ -316,8 +282,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Shows rationale dialog to the user explaining why the permission is needed.
   Future<bool> _showRationale(
-    PermissionType permissionType,
-    PermissionConfig config,
+    final PermissionType permissionType,
+    final PermissionConfig config,
   ) async {
     // This would typically show a platform-specific dialog
     // For now, we'll just return true to proceed with the request
@@ -327,8 +293,8 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Shows retry rationale dialog when permission was denied.
   Future<bool> _showRetryRationale(
-    PermissionType permissionType,
-    PermissionConfig config,
+    final PermissionType permissionType,
+    final PermissionConfig config,
   ) async {
     // Similar to _showRationale but with retry-specific messaging
     return true;
@@ -336,12 +302,10 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Handles permanently denied permissions by offering to open settings.
   Future<void> _handlePermanentlyDenied(
-    PermissionType permissionType,
-    PermissionConfig config,
+    final PermissionType permissionType,
+    final PermissionConfig config,
   ) async {
-    // This would show a dialog explaining that the user needs to enable
-    // the permission in settings and offer to open the settings page
-    // For now, we'll just open settings directly
+    // Open settings directly when configured to do so.
     await openAppSettings();
   }
 
@@ -351,27 +315,49 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
   ///
   /// Returns a [Future] that completes with true if permanently denied.
   @override
-  Future<bool> isPermanentlyDenied(PermissionType permissionType) async {
+  Future<bool> isPermanentlyDenied(final PermissionType permissionType) async {
     final status = await checkPermissionStatus(permissionType);
     return status.isPermanentlyDenied;
   }
 
-  /// Converts an integer result from the platform to a [PermissionStatus].
-  PermissionStatus _intToPermissionStatus(int? result) {
+  /// Map our permission type to permission_handler's Permission.
+  ph.Permission _mapPermission(final PermissionType permissionType) {
+    switch (permissionType) {
+      case PermissionType.camera:
+        return ph.Permission.camera;
+      case PermissionType.microphone:
+        return ph.Permission.microphone;
+      case PermissionType.locationWhenInUse:
+        return ph.Permission.locationWhenInUse;
+      case PermissionType.locationAlways:
+        return ph.Permission.locationAlways;
+      case PermissionType.photos:
+        return ph.Permission.photos;
+      case PermissionType.contacts:
+        return ph.Permission.contacts;
+      case PermissionType.calendar:
+        return ph.Permission.calendarFullAccess;
+      case PermissionType.storage:
+        return ph.Permission.storage;
+      case PermissionType.notification:
+        return ph.Permission.notification;
+    }
+  }
+
+  /// Converts permission_handler status to the package's PermissionStatus.
+  PermissionStatus _mapPermissionStatus(final ph.PermissionStatus result) {
     switch (result) {
-      case 0:
-        return PermissionStatus.undetermined;
-      case 1:
+      case ph.PermissionStatus.granted:
         return PermissionStatus.granted;
-      case 2:
+      case ph.PermissionStatus.denied:
         return PermissionStatus.denied;
-      case 3:
+      case ph.PermissionStatus.permanentlyDenied:
         return PermissionStatus.permanentlyDenied;
-      case 4:
+      case ph.PermissionStatus.restricted:
         return PermissionStatus.restricted;
-      case 5:
-        return PermissionStatus.notApplicable;
-      default:
+      case ph.PermissionStatus.limited:
+        return PermissionStatus.restricted;
+      case ph.PermissionStatus.provisional:
         return PermissionStatus.undetermined;
     }
   }

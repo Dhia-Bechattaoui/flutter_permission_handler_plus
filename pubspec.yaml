@@ -7,24 +7,21 @@ issue_tracker: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_pl
 documentation: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus#readme
 topics:
   - permissions
-  - android
-  - ios
-  - windows
-  - macos
-  - linux
-  - web
   - flutter
   - plugin
+  - android
+  - ios
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: ">=3.32.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  permission_handler: ^12.0.0
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
@@ -32,11 +29,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+funding:
+  - https://github.com/sponsors/Dhia-Bechattaoui
+
 flutter:
   plugin:
     platforms:
       android:
-        package: com.dhiabechattaoui.flutter_permission_handler_plus
+        package: com.github.dhia_bechattaoui.flutter_permission_handler_plus
         pluginClass: FlutterPermissionHandlerPlusPlugin
       ios:
         pluginClass: FlutterPermissionHandlerPlusPlugin

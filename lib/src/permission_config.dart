@@ -49,41 +49,38 @@ class PermissionConfig {
 
   /// Creates a copy of this configuration with optional new values.
   PermissionConfig copyWith({
-    String? rationale,
-    String? rationaleTitle,
-    bool? enableAutoRationale,
-    bool? enableSettingsRedirect,
-    String? settingsRedirectMessage,
-    String? settingsRedirectTitle,
-    int? retryCount,
-    bool? showPermissionIcon,
-  }) {
-    return PermissionConfig(
-      rationale: rationale ?? this.rationale,
-      rationaleTitle: rationaleTitle ?? this.rationaleTitle,
-      enableAutoRationale: enableAutoRationale ?? this.enableAutoRationale,
-      enableSettingsRedirect:
-          enableSettingsRedirect ?? this.enableSettingsRedirect,
-      settingsRedirectMessage:
-          settingsRedirectMessage ?? this.settingsRedirectMessage,
-      settingsRedirectTitle:
-          settingsRedirectTitle ?? this.settingsRedirectTitle,
-      retryCount: retryCount ?? this.retryCount,
-      showPermissionIcon: showPermissionIcon ?? this.showPermissionIcon,
-    );
-  }
+    final String? rationale,
+    final String? rationaleTitle,
+    final bool? enableAutoRationale,
+    final bool? enableSettingsRedirect,
+    final String? settingsRedirectMessage,
+    final String? settingsRedirectTitle,
+    final int? retryCount,
+    final bool? showPermissionIcon,
+  }) =>
+      PermissionConfig(
+        rationale: rationale ?? this.rationale,
+        rationaleTitle: rationaleTitle ?? this.rationaleTitle,
+        enableAutoRationale: enableAutoRationale ?? this.enableAutoRationale,
+        enableSettingsRedirect:
+            enableSettingsRedirect ?? this.enableSettingsRedirect,
+        settingsRedirectMessage:
+            settingsRedirectMessage ?? this.settingsRedirectMessage,
+        settingsRedirectTitle:
+            settingsRedirectTitle ?? this.settingsRedirectTitle,
+        retryCount: retryCount ?? this.retryCount,
+        showPermissionIcon: showPermissionIcon ?? this.showPermissionIcon,
+      );
 
   @override
-  String toString() {
-    return 'PermissionConfig('
-        'rationale: $rationale, '
-        'rationaleTitle: $rationaleTitle, '
-        'enableAutoRationale: $enableAutoRationale, '
-        'enableSettingsRedirect: $enableSettingsRedirect, '
-        'settingsRedirectMessage: $settingsRedirectMessage, '
-        'settingsRedirectTitle: $settingsRedirectTitle, '
-        'retryCount: $retryCount, '
-        'showPermissionIcon: $showPermissionIcon'
-        ')';
-  }
+  String toString() => 'PermissionConfig('
+      'rationale: $rationale, '
+      'rationaleTitle: $rationaleTitle, '
+      'enableAutoRationale: $enableAutoRationale, '
+      'enableSettingsRedirect: $enableSettingsRedirect, '
+      'settingsRedirectMessage: $settingsRedirectMessage, '
+      'settingsRedirectTitle: $settingsRedirectTitle, '
+      'retryCount: $retryCount, '
+      'showPermissionIcon: $showPermissionIcon'
+      ')';
 }

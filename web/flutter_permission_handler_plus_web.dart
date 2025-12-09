@@ -1,28 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-
 import 'package:flutter_permission_handler_plus/src/permission_config.dart';
 import 'package:flutter_permission_handler_plus/src/permission_status.dart';
 import 'package:flutter_permission_handler_plus/src/permission_type.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 /// Web implementation of the permission handler.
 class FlutterPermissionHandlerPlusWeb {
-  static void registerWith(Registrar registrar) {
-    final MethodChannel channel = MethodChannel(
+  static void registerWith(final Registrar registrar) {
+    final channel = MethodChannel(
       'flutter_permission_handler_plus',
       const StandardMethodCodec(),
       registrar,
     );
-    final FlutterPermissionHandlerPlusWeb instance =
-        FlutterPermissionHandlerPlusWeb();
+    final instance = FlutterPermissionHandlerPlusWeb();
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
 
   Future<PermissionStatus> requestPermission(
-    PermissionType permissionType, {
-    PermissionConfig? config,
+    final PermissionType permissionType, {
+    final PermissionConfig? config,
   }) async {
     // On Web, we can't request native permissions
     // Return granted status as a fallback
@@ -30,9 +28,9 @@ class FlutterPermissionHandlerPlusWeb {
   }
 
   Future<Map<PermissionType, PermissionStatus>> requestPermissions(
-    Map<PermissionType, PermissionConfig> permissions,
+    final Map<PermissionType, PermissionConfig> permissions,
   ) async {
-    final Map<PermissionType, PermissionStatus> results = {};
+    final results = <PermissionType, PermissionStatus>{};
     for (final permission in permissions.keys) {
       results[permission] =
           await requestPermission(permission, config: permissions[permission]);
@@ -41,7 +39,7 @@ class FlutterPermissionHandlerPlusWeb {
   }
 
   Future<PermissionStatus> checkPermissionStatus(
-    PermissionType permissionType,
+    final PermissionType permissionType,
   ) async {
     // On Web, we can't check native permission status
     // Return granted status as a fallback
@@ -49,9 +47,9 @@ class FlutterPermissionHandlerPlusWeb {
   }
 
   Future<Map<PermissionType, PermissionStatus>> checkPermissionStatuses(
-    List<PermissionType> permissionTypes,
+    final List<PermissionType> permissionTypes,
   ) async {
-    final Map<PermissionType, PermissionStatus> results = {};
+    final results = <PermissionType, PermissionStatus>{};
     for (final permission in permissionTypes) {
       results[permission] = await checkPermissionStatus(permission);
     }
@@ -63,40 +61,42 @@ class FlutterPermissionHandlerPlusWeb {
     return false;
   }
 
-  Future<bool> isPermanentlyDenied(PermissionType permissionType) async {
+  Future<bool> isPermanentlyDenied(final PermissionType permissionType) async {
     // On Web, permissions are not permanently denied
     return false;
   }
 
   Future<bool> shouldShowRequestPermissionRationale(
-    PermissionType permissionType,
+    final PermissionType permissionType,
   ) async {
     // On Web, we don't need to show rationale
     return false;
   }
 
-  Future<dynamic> handleMethodCall(MethodCall call) async {
+  Future<dynamic> handleMethodCall(final MethodCall call) async {
+    final args = (call.arguments as Map<Object?, Object?>?) ?? const {};
+
     switch (call.method) {
       case 'requestPermission':
-        final String permissionName = call.arguments['permission'] as String;
+        final permissionName = args['permission'] as String? ?? '';
         final permissionType = PermissionType.values.firstWhere(
-          (e) => e.name == permissionName,
+          (final e) => e.name == permissionName,
           orElse: () => PermissionType.camera,
         );
         final result = await requestPermission(permissionType);
         return result.index;
       case 'checkPermissionStatus':
-        final String permissionName = call.arguments['permission'] as String;
+        final permissionName = args['permission'] as String? ?? '';
         final permissionType = PermissionType.values.firstWhere(
-          (e) => e.name == permissionName,
+          (final e) => e.name == permissionName,
           orElse: () => PermissionType.camera,
         );
         final result = await checkPermissionStatus(permissionType);
         return result.index;
       case 'shouldShowRequestPermissionRationale':
-        final String permissionName = call.arguments['permission'] as String;
+        final permissionName = args['permission'] as String? ?? '';
         final permissionType = PermissionType.values.firstWhere(
-          (e) => e.name == permissionName,
+          (final e) => e.name == permissionName,
           orElse: () => PermissionType.camera,
         );
         return shouldShowRequestPermissionRationale(permissionType);
@@ -106,7 +106,7 @@ class FlutterPermissionHandlerPlusWeb {
         throw PlatformException(
           code: 'Unimplemented',
           details:
-              'flutter_permission_handler_plus for web doesn\'t implement \'${call.method}\'',
+              "flutter_permission_handler_plus for web doesn't implement '${call.method}'",
         );
     }
   }

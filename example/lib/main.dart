@@ -36,6 +36,8 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
   final Map<PermissionType, PermissionStatus> _permissionStatuses = {};
   final PermissionHandlerPlus _permissionHandler = PermissionHandlerPlus();
   bool _isLoading = false;
+  bool _enableSettingsRedirect = true;
+  int _retryCount = 2;
 
   @override
   void initState() {
@@ -75,6 +77,8 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
     try {
       final config = PermissionConfig(
         rationale: _getCustomRationale(permission),
+        enableSettingsRedirect: _enableSettingsRedirect,
+        retryCount: _retryCount,
       );
 
       final status = await _permissionHandler.requestPermission(
@@ -142,6 +146,15 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
     } else {
       _showErrorSnackBar('Failed to open app settings');
     }
+  }
+
+  /// Clears cached statuses to force fresh platform checks.
+  void _clearCache() {
+    _permissionHandler.clearCache();
+    setState(() {
+      _permissionStatuses.clear();
+    });
+    _showSuccessSnackBar('Cache cleared. Refresh to recheck.');
   }
 
   /// Gets custom rationale message for a permission.
@@ -317,23 +330,79 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                 // Action buttons
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Row(
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed:
-                              _isLoading ? null : _requestMultiplePermissions,
-                          icon: const Icon(Icons.group_add),
-                          label: const Text('Request Multiple'),
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoading
+                                  ? null
+                                  : _requestMultiplePermissions,
+                              icon: const Icon(Icons.group_add),
+                              label: const Text('Request Multiple'),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed:
+                                  _isLoading ? null : _checkAllPermissions,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Refresh All'),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _isLoading ? null : _checkAllPermissions,
-                          icon: const Icon(Icons.refresh),
-                          label: const Text('Refresh All'),
-                        ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading ? null : _clearCache,
+                              icon: const Icon(Icons.clear_all),
+                              label: const Text('Clear Cache'),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () => setState(() {
+                                        _enableSettingsRedirect =
+                                            !_enableSettingsRedirect;
+                                      }),
+                              icon: Icon(_enableSettingsRedirect
+                                  ? Icons.toggle_on
+                                  : Icons.toggle_off),
+                              label: Text(_enableSettingsRedirect
+                                  ? 'Settings Redirect: ON'
+                                  : 'Settings Redirect: OFF'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Slider(
+                              value: _retryCount.toDouble(),
+                              min: 0,
+                              max: 3,
+                              divisions: 3,
+                              label: 'Retries: $_retryCount',
+                              onChanged: _isLoading
+                                  ? null
+                                  : (value) => setState(() {
+                                        _retryCount = value.toInt();
+                                      }),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text('Retries: $_retryCount'),
+                        ],
                       ),
                     ],
                   ),

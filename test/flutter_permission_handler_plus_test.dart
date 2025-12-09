@@ -6,8 +6,10 @@ void main() {
     test('should have correct display names', () {
       expect(PermissionType.camera.displayName, 'Camera');
       expect(PermissionType.microphone.displayName, 'Microphone');
-      expect(PermissionType.locationWhenInUse.displayName,
-          'Location (When in Use)');
+      expect(
+        PermissionType.locationWhenInUse.displayName,
+        'Location (When in Use)',
+      );
       expect(PermissionType.locationAlways.displayName, 'Location (Always)');
       expect(PermissionType.photos.displayName, 'Photos');
       expect(PermissionType.contacts.displayName, 'Contacts');
@@ -67,13 +69,19 @@ void main() {
     test('should have correct descriptions', () {
       expect(PermissionStatus.granted.description, 'Permission granted');
       expect(PermissionStatus.denied.description, 'Permission denied');
-      expect(PermissionStatus.permanentlyDenied.description,
-          'Permission permanently denied');
+      expect(
+        PermissionStatus.permanentlyDenied.description,
+        'Permission permanently denied',
+      );
       expect(PermissionStatus.restricted.description, 'Permission restricted');
-      expect(PermissionStatus.notApplicable.description,
-          'Permission not applicable');
-      expect(PermissionStatus.undetermined.description,
-          'Permission not determined');
+      expect(
+        PermissionStatus.notApplicable.description,
+        'Permission not applicable',
+      );
+      expect(
+        PermissionStatus.undetermined.description,
+        'Permission not determined',
+      );
     });
   });
 
@@ -171,22 +179,28 @@ void main() {
       const exception = UnsupportedPermissionException('Unsupported');
       expect(exception.message, 'Unsupported');
       expect(
-          exception.toString(), 'UnsupportedPermissionException: Unsupported');
+        exception.toString(),
+        'UnsupportedPermissionException: Unsupported',
+      );
     });
 
     test('PermissionHandlerNotInitializedException should work correctly', () {
       const exception =
           PermissionHandlerNotInitializedException('Not initialized');
       expect(exception.message, 'Not initialized');
-      expect(exception.toString(),
-          'PermissionHandlerNotInitializedException: Not initialized');
+      expect(
+        exception.toString(),
+        'PermissionHandlerNotInitializedException: Not initialized',
+      );
     });
 
     test('InvalidPermissionException should work correctly', () {
       const exception = InvalidPermissionException('Invalid permission');
       expect(exception.message, 'Invalid permission');
-      expect(exception.toString(),
-          'InvalidPermissionException: Invalid permission');
+      expect(
+        exception.toString(),
+        'InvalidPermissionException: Invalid permission',
+      );
     });
   });
 

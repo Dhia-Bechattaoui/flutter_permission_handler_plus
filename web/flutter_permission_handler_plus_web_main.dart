@@ -3,6 +3,6 @@ import 'flutter_permission_handler_plus_web.dart';
 
 /// Main entry point for the web plugin.
 /// This function is called by Flutter to register the plugin.
-void registerWith(Registrar registrar) {
+void registerWith(final Registrar registrar) {
   FlutterPermissionHandlerPlusWeb.registerWith(registrar);
 }

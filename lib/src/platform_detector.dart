@@ -30,7 +30,9 @@ class PlatformDetector {
 
   /// Gets the current platform name as a string.
   static String get platformName {
-    if (kIsWeb) return 'web';
+    if (kIsWeb) {
+      return 'web';
+    }
 
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -43,8 +45,8 @@ class PlatformDetector {
         return 'macos';
       case TargetPlatform.linux:
         return 'linux';
-      default:
-        return 'unknown';
+      case TargetPlatform.fuchsia:
+        return 'fuchsia';
     }
   }
 

@@ -18,8 +18,8 @@ abstract class PermissionHandlerPlusInterface {
   /// Throws [PermissionRequestException] if the request fails.
   /// Throws [UnsupportedPermissionException] if the permission is not supported.
   Future<PermissionStatus> requestPermission(
-    PermissionType permissionType, {
-    PermissionConfig config,
+    final PermissionType permissionType, {
+    final PermissionConfig config,
   });
 
   /// Requests multiple permissions simultaneously.
@@ -28,7 +28,7 @@ abstract class PermissionHandlerPlusInterface {
   ///
   /// Returns a [Future] that completes with a map of permission statuses.
   Future<Map<PermissionType, PermissionStatus>> requestPermissions(
-    Map<PermissionType, PermissionConfig> permissions,
+    final Map<PermissionType, PermissionConfig> permissions,
   );
 
   /// Checks the current status of a permission.
@@ -36,7 +36,9 @@ abstract class PermissionHandlerPlusInterface {
   /// [permissionType] The type of permission to check.
   ///
   /// Returns a [Future] that completes with the current [PermissionStatus].
-  Future<PermissionStatus> checkPermissionStatus(PermissionType permissionType);
+  Future<PermissionStatus> checkPermissionStatus(
+    final PermissionType permissionType,
+  );
 
   /// Checks the current status of multiple permissions.
   ///
@@ -44,7 +46,7 @@ abstract class PermissionHandlerPlusInterface {
   ///
   /// Returns a [Future] that completes with a map of permission statuses.
   Future<Map<PermissionType, PermissionStatus>> checkPermissionStatuses(
-    List<PermissionType> permissionTypes,
+    final List<PermissionType> permissionTypes,
   );
 
   /// Opens the app settings page.
@@ -60,7 +62,7 @@ abstract class PermissionHandlerPlusInterface {
   /// [permissionType] The type of permission to check.
   ///
   /// Returns a [Future] that completes with true if permanently denied.
-  Future<bool> isPermanentlyDenied(PermissionType permissionType);
+  Future<bool> isPermanentlyDenied(final PermissionType permissionType);
 
   /// Checks if a permission should show a rationale.
   ///
@@ -68,5 +70,6 @@ abstract class PermissionHandlerPlusInterface {
   ///
   /// Returns a [Future] that completes with true if rationale should be shown.
   Future<bool> shouldShowRequestPermissionRationale(
-      PermissionType permissionType);
+    final PermissionType permissionType,
+  );
 }

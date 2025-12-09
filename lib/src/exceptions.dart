@@ -9,7 +9,9 @@ abstract class PermissionException implements Exception {
   @override
   String toString() {
     final msg = message;
-    if (msg == null) return 'PermissionException';
+    if (msg == null) {
+      return 'PermissionException';
+    }
     return 'PermissionException: $msg';
   }
 }
@@ -22,7 +24,9 @@ class PermissionRequestException extends PermissionException {
   @override
   String toString() {
     final msg = message;
-    if (msg == null) return 'PermissionRequestException';
+    if (msg == null) {
+      return 'PermissionRequestException';
+    }
     return 'PermissionRequestException: $msg';
   }
 }
@@ -35,7 +39,9 @@ class UnsupportedPermissionException extends PermissionException {
   @override
   String toString() {
     final msg = message;
-    if (msg == null) return 'UnsupportedPermissionException';
+    if (msg == null) {
+      return 'UnsupportedPermissionException';
+    }
     return 'UnsupportedPermissionException: $msg';
   }
 }
@@ -48,7 +54,9 @@ class PermissionHandlerNotInitializedException extends PermissionException {
   @override
   String toString() {
     final msg = message;
-    if (msg == null) return 'PermissionHandlerNotInitializedException';
+    if (msg == null) {
+      return 'PermissionHandlerNotInitializedException';
+    }
     return 'PermissionHandlerNotInitializedException: $msg';
   }
 }
@@ -61,7 +69,9 @@ class InvalidPermissionException extends PermissionException {
   @override
   String toString() {
     final msg = message;
-    if (msg == null) return 'InvalidPermissionException';
+    if (msg == null) {
+      return 'InvalidPermissionException';
+    }
     return 'InvalidPermissionException: $msg';
   }
 }

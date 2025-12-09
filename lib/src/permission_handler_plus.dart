@@ -30,7 +30,7 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
 
   /// Cache for pending permission requests to avoid duplicate requests.
   static final Map<PermissionType, Completer<PermissionStatus>>
-      _pendingRequests = {};
+  _pendingRequests = {};
 
   /// Singleton instance of the permission handler.
   static PermissionHandlerPlus? _instance;
@@ -130,9 +130,7 @@ class PermissionHandlerPlus implements PermissionHandlerPlusInterface {
       _statusCache[permissionType] = status;
       return status;
     } on Exception catch (e) {
-      throw PermissionRequestException(
-        'Failed to check permission status: $e',
-      );
+      throw PermissionRequestException('Failed to check permission status: $e');
     }
   }
 

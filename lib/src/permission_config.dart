@@ -57,23 +57,22 @@ class PermissionConfig {
     final String? settingsRedirectTitle,
     final int? retryCount,
     final bool? showPermissionIcon,
-  }) =>
-      PermissionConfig(
-        rationale: rationale ?? this.rationale,
-        rationaleTitle: rationaleTitle ?? this.rationaleTitle,
-        enableAutoRationale: enableAutoRationale ?? this.enableAutoRationale,
-        enableSettingsRedirect:
-            enableSettingsRedirect ?? this.enableSettingsRedirect,
-        settingsRedirectMessage:
-            settingsRedirectMessage ?? this.settingsRedirectMessage,
-        settingsRedirectTitle:
-            settingsRedirectTitle ?? this.settingsRedirectTitle,
-        retryCount: retryCount ?? this.retryCount,
-        showPermissionIcon: showPermissionIcon ?? this.showPermissionIcon,
-      );
+  }) => PermissionConfig(
+    rationale: rationale ?? this.rationale,
+    rationaleTitle: rationaleTitle ?? this.rationaleTitle,
+    enableAutoRationale: enableAutoRationale ?? this.enableAutoRationale,
+    enableSettingsRedirect:
+        enableSettingsRedirect ?? this.enableSettingsRedirect,
+    settingsRedirectMessage:
+        settingsRedirectMessage ?? this.settingsRedirectMessage,
+    settingsRedirectTitle: settingsRedirectTitle ?? this.settingsRedirectTitle,
+    retryCount: retryCount ?? this.retryCount,
+    showPermissionIcon: showPermissionIcon ?? this.showPermissionIcon,
+  );
 
   @override
-  String toString() => 'PermissionConfig('
+  String toString() =>
+      'PermissionConfig('
       'rationale: $rationale, '
       'rationaleTitle: $rationaleTitle, '
       'enableAutoRationale: $enableAutoRationale, '

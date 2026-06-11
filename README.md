@@ -5,6 +5,10 @@
 
 A wrapper around the standard `permission_handler` package that provides built-in rationale dialogs, automatic app settings redirects, automatic retry loops, and clean batch request handling.
 
+<p align="center">
+  <img src="assets/example.gif" alt="Example usage" width="300" />
+</p>
+
 ## Features
 
 * **Automatic Rationale Dialogs**: Prompts users with configurable reasons why a permission is needed.

@@ -1,4 +1,4 @@
-group 'com.github.dhia_bechattaoui.flutter_permission_handler_plus'
+group 'com.github.bechattaoui.flutter_permission_handler_plus'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 33
-    namespace "com.github.dhia_bechattaoui.flutter_permission_handler_plus"
+    namespace "com.github.bechattaoui.flutter_permission_handler_plus"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

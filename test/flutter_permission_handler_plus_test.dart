@@ -185,8 +185,9 @@ void main() {
     });
 
     test('PermissionHandlerNotInitializedException should work correctly', () {
-      const exception =
-          PermissionHandlerNotInitializedException('Not initialized');
+      const exception = PermissionHandlerNotInitializedException(
+        'Not initialized',
+      );
       expect(exception.message, 'Not initialized');
       expect(
         exception.toString(),

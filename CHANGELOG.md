@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - Unreleased
+## [0.1.1] - 2026-06-11
+
+### Fixed
+- Fixed Android package directory path mismatch and package name consistency
+
+### Changed
+- Rewrote README.md for a cleaner, professional presentation
+
+## [0.1.0] - 2026-06-11
 
 ### Added
 - Real permission handling via `permission_handler` (requests, status, settings)
@@ -46,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cross-platform support (iOS, Android, Windows, macOS, Linux, Web)
 - Plugin platform interface integration
 
-[Unreleased]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/compare/v0.0.2...HEAD
-[0.1.0]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/compare/v0.0.2...v0.1.0
+[Unreleased]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/releases/tag/v0.1.0
 [0.0.2]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/releases/tag/v0.0.2
 [0.0.1]: https://github.com/Dhia-Bechattaoui/flutter_permission_handler_plus/releases/tag/v0.0.1

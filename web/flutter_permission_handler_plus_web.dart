@@ -32,8 +32,10 @@ class FlutterPermissionHandlerPlusWeb {
   ) async {
     final results = <PermissionType, PermissionStatus>{};
     for (final permission in permissions.keys) {
-      results[permission] =
-          await requestPermission(permission, config: permissions[permission]);
+      results[permission] = await requestPermission(
+        permission,
+        config: permissions[permission],
+      );
     }
     return results;
   }

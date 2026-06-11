@@ -1,4 +1,4 @@
-package com.github.dhia_bechattaoui.flutter_permission_handler_plus
+package com.github.bechattaoui.flutter_permission_handler_plus
 
 import androidx.annotation.NonNull
 

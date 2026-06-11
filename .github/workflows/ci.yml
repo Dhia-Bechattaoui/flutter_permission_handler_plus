@@ -53,13 +53,24 @@ jobs:
       - name: Create and push version tag
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
+          PACKAGE_NAME=$(grep '^name: ' pubspec.yaml | awk '{print $2}')
           VERSION=$(grep '^version: ' pubspec.yaml | awk '{print $2}')
           TAG="v$VERSION"
-          # Check if tag already exists
-          if git ls-remote --tags origin | grep -q "refs/tags/$TAG"; then
-            echo "Tag $TAG already exists on remote, skipping tag creation."
+          
+          # Check if version is already published on pub.dev
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" "https://pub.dev/api/packages/$PACKAGE_NAME/versions/$VERSION")
+          
+          if [ "$STATUS_CODE" = "200" ]; then
+            echo "Version $VERSION is already published on pub.dev. Skipping tagging."
           else
-            echo "Creating and pushing new tag: $TAG"
+            echo "Version $VERSION is not published on pub.dev."
+            # If tag exists but version isn't on pub.dev, delete remote/local tag to allow re-push
+            if git ls-remote --tags origin | grep -q "refs/tags/$TAG"; then
+              echo "Tag $TAG exists but version is not on pub.dev. Re-pushing tag to trigger publication."
+              git tag -d "$TAG" || true
+              git push origin :refs/tags/"$TAG" || true
+            fi
+            echo "Creating and pushing tag: $TAG"
             git tag "$TAG"
             git push origin "$TAG"
           fi

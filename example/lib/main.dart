@@ -226,7 +226,8 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
 
   /// Shows multiple permission statuses in snack bar.
   void _showMultipleStatusSnackBar(
-      Map<PermissionType, PermissionStatus> statuses) {
+    Map<PermissionType, PermissionStatus> statuses,
+  ) {
     final granted = statuses.values.where((status) => status.isGranted).length;
     final total = statuses.length;
 
@@ -346,8 +347,9 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                           const SizedBox(width: 16),
                           Expanded(
                             child: OutlinedButton.icon(
-                              onPressed:
-                                  _isLoading ? null : _checkAllPermissions,
+                              onPressed: _isLoading
+                                  ? null
+                                  : _checkAllPermissions,
                               icon: const Icon(Icons.refresh),
                               label: const Text('Refresh All'),
                             ),
@@ -370,15 +372,19 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                               onPressed: _isLoading
                                   ? null
                                   : () => setState(() {
-                                        _enableSettingsRedirect =
-                                            !_enableSettingsRedirect;
-                                      }),
-                              icon: Icon(_enableSettingsRedirect
-                                  ? Icons.toggle_on
-                                  : Icons.toggle_off),
-                              label: Text(_enableSettingsRedirect
-                                  ? 'Settings Redirect: ON'
-                                  : 'Settings Redirect: OFF'),
+                                      _enableSettingsRedirect =
+                                          !_enableSettingsRedirect;
+                                    }),
+                              icon: Icon(
+                                _enableSettingsRedirect
+                                    ? Icons.toggle_on
+                                    : Icons.toggle_off,
+                              ),
+                              label: Text(
+                                _enableSettingsRedirect
+                                    ? 'Settings Redirect: ON'
+                                    : 'Settings Redirect: OFF',
+                              ),
                             ),
                           ),
                         ],
@@ -396,8 +402,8 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                               onChanged: _isLoading
                                   ? null
                                   : (value) => setState(() {
-                                        _retryCount = value.toInt();
-                                      }),
+                                      _retryCount = value.toInt();
+                                    }),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -414,13 +420,15 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                     itemCount: PermissionType.values.length,
                     itemBuilder: (context, index) {
                       final permission = PermissionType.values[index];
-                      final status = _permissionStatuses[permission] ??
+                      final status =
+                          _permissionStatuses[permission] ??
                           PermissionStatus.undetermined;
 
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor:
-                              _getStatusColor(status).withValues(alpha: 0.2),
+                          backgroundColor: _getStatusColor(
+                            status,
+                          ).withValues(alpha: 0.2),
                           child: Icon(
                             _getPermissionIcon(permission),
                             color: _getStatusColor(status),
@@ -429,8 +437,10 @@ class _PermissionDemoPageState extends State<PermissionDemoPage> {
                         title: Text(permission.displayName),
                         subtitle: Text(status.description),
                         trailing: status.isGranted
-                            ? const Icon(Icons.check_circle,
-                                color: Colors.green)
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
                             : IconButton(
                                 icon: const Icon(Icons.security),
                                 onPressed: _isLoading
